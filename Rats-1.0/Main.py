@@ -8,7 +8,7 @@ import ScreenFunctions
 import TargetFunctions
 import AlgorithmFunctions
 
-rats_picture = "D:\\Rats-1.0\\images\\mouse.png"
+rats_picture = "D:\test\Rats-1.0\\images\\mouse.png"
 target_image = "D:\\Rats-1.0\\images\\cheese.png"
 
 population_size = 500
