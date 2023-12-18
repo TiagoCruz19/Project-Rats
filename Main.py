@@ -7,6 +7,7 @@ import RatsFunctions
 import Target
 import AlgorithmFunctions
 
+
 # VARIABLES 
 rats_img_path = ".\\images\\mouse.png"
 target_img_path = ".\\images\\cheese.png"
@@ -24,14 +25,6 @@ genome_size = 200
 generation_count = 1
 previous_movement_time = time.time()
 
-
-# WINDOW CONFIGURATION
-pygame.init()
-clock = pygame.time.Clock()
-pygame.display.set_caption("Genetic Algorithm")
-screen = pygame.display.set_mode((screen_width, screen_height))
-screen.fill('white')
-
 # TARGET
 target_group = pygame.sprite.Group()
 target = Target.create_target(target_img_path, (screen_width - 30), 50)
@@ -42,6 +35,15 @@ rats_groups = RatsFunctions.create_rats(population_size, rats_img_path)
 
 # GENOME
 AlgorithmFunctions.random_rats_genomes(rats_groups, genome_size)
+
+# WINDOW CONFIGURATION
+pygame.init()
+clock = pygame.time.Clock()
+pygame.display.set_caption("Genetic Algorithm")
+screen = pygame.display.set_mode((screen_width, screen_height))
+screen.fill('white')
+
+
 
 while True:
 
