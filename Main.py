@@ -9,29 +9,27 @@ import AlgorithmFunctions
 
 
 # VARIABLES 
-rats_img_path = ".\\images\\mouse.png"
+rats_img_path = ".\\images\\mouse_N.png"
 target_img_path = ".\\images\\cheese.png"
 
 population_size = 500
-screen_width = 800
-screen_height = 800
 mouse_position = [0, 0]
-not_ready = True
+ready = False
 current_time = 0
 rats_begin_time = 0
 gene_index = 0
-time_to_live = 8000
+time_to_live = 12000
 genome_size = 200
 generation_count = 1
 previous_movement_time = time.time()
 
 # TARGET
 target_group = pygame.sprite.Group()
-target = Target.create_target(target_img_path, (screen_width - 30), 50)
+target = Target.create_target(target_img_path, (800 - 30), 50)
 target_group.add(target)
 
 # RATS
-rats_groups = RatsFunctions.create_rats(population_size, rats_img_path)
+rats_groups = RatsFunctions.create_new_rats(population_size, rats_img_path)
 
 # GENOME
 AlgorithmFunctions.random_rats_genomes(rats_groups, genome_size)
@@ -40,20 +38,14 @@ AlgorithmFunctions.random_rats_genomes(rats_groups, genome_size)
 pygame.init()
 clock = pygame.time.Clock()
 pygame.display.set_caption("Genetic Algorithm")
-screen = pygame.display.set_mode((screen_width, screen_height))
-screen.fill('white')
-
+screen = pygame.display.set_mode((800, 800))
 
 
 while True:
 
-    #temp
     screen.fill('white')
-    #----
-
     Target.draw_and_update_target_group(screen, target_group)
 
-    delta_time = time.time() - previous_movement_time
     previous_movement_time = time.time()
 
     for event in pygame.event.get():
@@ -61,34 +53,32 @@ while True:
             pygame.quit()
             sys.exit()
 
-        if not_ready:
+        if not ready:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_position = pygame.mouse.get_pos()
                 rats_start_position = RatsFunctions.set_rats_start_position(rats_groups, mouse_position)
                 rats_begin_time = pygame.time.get_ticks()
-                not_ready = False
+                ready = True
 
     current_time = pygame.time.get_ticks()
 
-    if not not_ready:
+    if ready:
         if ((current_time - rats_begin_time) < time_to_live) and (gene_index < genome_size):
             for group in rats_groups:
-                t = Thread(target=RatsFunctions.move, args=(group.sprites()[0], gene_index, screen, delta_time))
+                t = Thread(target=RatsFunctions.move, args=(group.sprites()[0], gene_index, screen))
                 t.start()
             gene_index += 1
             t.join()
         else:
+
             best_rats = AlgorithmFunctions.ranking_rats(rats_groups, target_group)
-            rats_new_gen = RatsFunctions.create_rats(population_size, rats_img_path)
-
-            # settar distancia antiga
-            AlgorithmFunctions.set_previous_distances(rats_groups, rats_new_gen)
-
+            rats_new_gen = RatsFunctions.create_new_rats(population_size, rats_img_path)
             AlgorithmFunctions.new_genomes(best_rats, rats_new_gen, genome_size)
-
-
-            AlgorithmFunctions.kill_rats(rats_groups)
             RatsFunctions.set_rats_start_position(rats_new_gen, mouse_position)
+
+            for old_rats_groups, new_rats_groups in zip(rats_groups, rats_new_gen):
+                for old_rat, new_rat in zip (old_rats_groups, new_rats_groups):
+                    new_rat.set_distance(old_rat.get_distance())
 
             rats_groups = rats_new_gen
             gene_index = 0
