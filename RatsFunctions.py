@@ -2,7 +2,7 @@ import Rats
 import pygame
 
 
-def create_rats(population_size, rats_picture):
+def create_new_rats(population_size, rats_picture):
     rat_groups = []
 
     for x in range(population_size):
@@ -19,31 +19,27 @@ def set_rats_start_position(rats_groups, mouse_position):
             rat.rect.y = mouse_position[1]
 
 
-'''def rotate(self, _screen, angle):
-    self.image = pygame.transform.rotate(self.image, angle)
-    self.rect = self.image.get_rect()
-    self.rect.center = [self.get_position()[0], self.get_position()[1]]'''
-
-
-def move(rat, gene_index, screen, delta_time):
-        if rat.get_genome()[gene_index] == "N":
+def move(rat, gene_index, screen):
+        if rat.get_genome()[gene_index] == "N": 
+            screen.blit(rat.sprites_img[0], [rat.rect.x, rat.rect.y])
             if rat.rect.y >= 20:
-                rat.rect.y -= round(rat.speed * delta_time)
+                rat.update(0, -5)
             
         elif rat.get_genome()[gene_index] == "S":
+            screen.blit(rat.sprites_img[1], [rat.rect.x, rat.rect.y])
             if rat.rect.y <= (screen.get_height()-60):
-                rat.rect.y += round(rat.speed * delta_time)
+                rat.update(0, 5)
             
         elif rat.get_genome()[gene_index] == "L":
-            if rat.rect.x <= (screen.get_width()-50):
-                rat.rect.x += round(rat.speed * delta_time)
-            
+            screen.blit(rat.sprites_img[2], [rat.rect.x, rat.rect.y])
+            if rat.rect.x <= (screen.get_width()-60):
+                rat.update(5, 0)
+
         elif rat.get_genome()[gene_index] == "W":
+            screen.blit(rat.sprites_img[3], [rat.rect.x, rat.rect.y])
             if rat.rect.x >= 20:
-                rat.rect.x -= round(rat.speed * delta_time)
+                rat.update(-5, 0)
             
         elif rat.get_genome()[gene_index] == "X":
-            rat.rect.y = rat.rect.y
-            rat.rect.x = rat.rect.x
-
-        screen.blit(rat.image, [rat.rect.x, rat.rect.y])
+            screen.blit(rat.sprites_img[0], [rat.rect.x, rat.rect.y])
+            rat.update(0, 0)
