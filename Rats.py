@@ -8,10 +8,17 @@ class Rat(pygame.sprite.Sprite):
 
         self.genome = []
         self.score = 0
-        self.speed = 100
-        self.previous_target_distance = 99999
-        self.image = pygame.transform.scale(pygame.image.load(picture_path), [30, 40])
-        self.rect = self.image.get_rect()
+        self.distance = 99999
+        self.sprites_img = [
+            pygame.transform.scale(pygame.image.load(".\\images\\mouse_N.png"), [30, 40]),
+            pygame.transform.scale(pygame.image.load(".\\images\\mouse_S.png"), [30, 40]),
+            pygame.transform.scale(pygame.image.load(".\\images\\mouse_L.png"), [40, 30]),
+            pygame.transform.scale(pygame.image.load(".\\images\\mouse_W.png"), [40, 30])
+        ]
+        self.rect = self.sprites_img[0].get_rect()
+
+    def update(self, move_x, move_y):
+        self.rect.move_ip(move_x, move_y)
 
     def get_score(self):
         return self.score
@@ -25,8 +32,8 @@ class Rat(pygame.sprite.Sprite):
     def set_genome(self, _genome):
         self.genome = _genome
 
-    def get_previous_target_distance(self):
-        return self.previous_target_distance
+    def get_distance(self):
+        return self.distance
 
-    def set_previous_target_distance(self, _previous_target_distance):
-        self.previous_target_distance = _previous_target_distance
+    def set_distance(self, _distance):
+        self.distance = _distance
