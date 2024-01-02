@@ -25,7 +25,7 @@ previous_movement_time = time.time()
 
 # TARGET
 target_group = pygame.sprite.Group()
-target = Target.create_target(target_img_path, (800 - 30), 50)
+target = Target.create_target(target_img_path, (800 - 45), (800 - 90))
 target_group.add(target)
 
 # RATS
@@ -40,10 +40,11 @@ clock = pygame.time.Clock()
 pygame.display.set_caption("Genetic Algorithm")
 screen = pygame.display.set_mode((800, 800))
 
+walls = pygame.image.load(".\\images\\wall.jpg")
+walls_size = pygame.transform.scale(walls, (800, 800))
 
 while True:
-
-    screen.fill('white')
+    screen.blit(walls_size, (0, 0))
     Target.draw_and_update_target_group(screen, target_group)
 
     previous_movement_time = time.time()
