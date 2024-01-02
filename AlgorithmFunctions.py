@@ -23,26 +23,17 @@ def ranking_rats(rats_groups, target_group):
 
 
 def calculate_rats_scores(rat, target_group): # MELHORAR CALCULO
-
     rat_target_distance = math.hypot(target_group.sprites()[0].rect.center[0] - rat.rect.x, target_group.sprites()[0].rect.center[1] - rat.rect.y)
 
-    if rat.get_previous_target_distance() > rat_target_distance:
+    if rat.get_distance() > rat_target_distance:
         rat.set_score(10000 - rat_target_distance)
-
-    elif rat.get_previous_target_distance() < rat_target_distance:
+    elif rat.get_distance() < rat_target_distance:
             rat.set_score(1000 - rat_target_distance)
-
     elif rat_target_distance <= 3:
             rat.set_score(99999)
 
-    rat.set_previous_target_distance(rat_target_distance)
-
+    rat.set_distance(rat_target_distance)
     return rat.get_score()
-
-
-def set_previous_distances(previous_rats_groups, rats_new_gen): # SALVAR DISTANCIA MAIS EFICIENTEMENTE
-    for previous_rat, new_group in zip(previous_rats_groups, rats_new_gen):
-        new_group.sprites()[0].set_previous_target_distance(previous_rat.sprites()[0].get_previous_target_distance())
 
 
 def new_genomes(best_rats, rats_new_gen, genome_size): # INTRODUZIR MUTAÇÕES ALEATORIAS
@@ -58,6 +49,6 @@ def new_genomes(best_rats, rats_new_gen, genome_size): # INTRODUZIR MUTAÇÕES A
         group.sprites()[0].set_genome(new_genome)
 
 
-def kill_rats(rat_groups):
-    for _ in range(len(rat_groups)):
-        rat_groups.pop()
+'''def set_previous_distances(previous_rats_groups, rats_new_gen): # SALVAR DISTANCIA MAIS EFICIENTEMENTE
+    for previous_rat, new_group in zip(previous_rats_groups, rats_new_gen):
+        new_group.sprites()[0].set_distance(previous_rat.sprites()[0].get_distance())'''
